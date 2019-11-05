@@ -1,12 +1,6 @@
 <!-- This is a static file -->
 <!-- served from your routes in server.js -->
 
-<!-- You might want to try something fancier: -->
-<!-- html/nunjucks docs: https://mozilla.github.io/nunjucks/ -->
-<!-- pug: https://pugjs.org/ -->
-<!-- haml: http://haml.info/ -->
-<!-- hbs(handlebars): http://handlebarsjs.com/ -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -40,9 +34,17 @@
         <button type="submit" id="submit-dream">Submit Dream</button>
       </form>
       
+      <p class="note">
+        To save to or delete from the database, <a href="https://glitch.com/edit/#!/remix/longing-eel?utm_source=longing-eel&utm_medium=button&utm_campaign=glitchButton">remix</a> this app
+      </p>
+      
       <section class="dreams">
         <ul id="dreams"></ul>
+        <button id="clear-dreams" onclick="clearDreams()" aria-labelledby="clear-dreams">
+          Clear Dreams
+        </button>
       </section>
+      
     </main>
 
     <footer>

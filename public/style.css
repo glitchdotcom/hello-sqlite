@@ -69,3 +69,12 @@ footer {
   padding-top: 25px;
   border-top: 1px solid lightgrey;
 }
+
+.note{
+  width: fit-content;
+  border-radius: 3px;
+  background-color: hotpink;
+  color: white;
+  padding: 2px 10px;
+  font-weight: bold;
+}
