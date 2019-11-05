@@ -9,7 +9,6 @@ const dreams = [];
 const dreamsForm = document.forms[0];
 const dreamInput = dreamsForm.elements["dream"];
 const dreamsList = document.getElementById("dreams");
-const dreamsClearBtn = document.getElementById('clear-dreams');
 
 // request the dreams from our app's sqlite database
 fetch("/getDreams", {
@@ -62,6 +61,6 @@ const clearDreams = (event) => {
   .then(res => res.json())
   .then(response => {
     console.log('cleared dreams');
-    dreamsList.innerHTML = '';
-  })
+  });
+  dreamsList.innerHTML = '';
 }

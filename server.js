@@ -24,7 +24,7 @@ const db = new sqlite3.Database(dbFile);
 // if ./.data/sqlite.db does not exist, create it, otherwise print records to console
 db.serialize(() => {
   if (!exists) {
-    db.run("CREATE TABLE Dreams (dream TEXT)");
+    db.run("CREATE TABLE Dreams (id INTEGER PRIMARY KEY AUTOINCREMENT, dream TEXT)");
     console.log("New table Dreams created!");
 
     // insert default dreams
@@ -37,7 +37,7 @@ db.serialize(() => {
     console.log('Database "Dreams" ready to go!');
     db.each("SELECT * from Dreams", (err, row) => {
       if (row) {
-        console.log(`record: ${row}`);
+        console.log(`record: ${row.dream}`);
       }
     });
   }
@@ -59,8 +59,7 @@ app.get("/getDreams", (request, response) => {
 app.post("/addDream", (request, response) => {
   console.log(`add to dreams ${request.body}`);
 
-  // DISALLOW_WRITE is an ENV variable set to TRUE in this template (in .env)
-  // When you remix the app, DISALLOW_WRITE will be reset, and you can add to the database
+  // DISALLOW_WRITE is an ENV variable that gets reset for new projects so you can write to the database
   if (!process.env.DISALLOW_WRITE) {
     db.run(
       `INSERT INTO Dreams (dream) VALUES ("${request.body.dream}")`,
@@ -77,9 +76,8 @@ app.post("/addDream", (request, response) => {
 
 // endpoint to clear dreams from the database
 app.get("/clearDreams", (request, response) => {
-  // DISALLOW_WRITE is an ENV variable set to TRUE in this template (in .env)
-  // When you remix the app, DISALLOW_WRITE will be reset, and you can clear the database
-  if (!process.env.DISALLOW_REWRITE) {
+  // DISALLOW_WRITE is an ENV variable that gets reset for new projects so you can write to the database
+  if (!process.env.DISALLOW_WRITE) {
     db.each(
       "SELECT * from Dreams",
       (err, row) => {
