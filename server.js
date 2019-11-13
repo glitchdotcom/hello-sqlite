@@ -24,7 +24,9 @@ const db = new sqlite3.Database(dbFile);
 // if ./.data/sqlite.db does not exist, create it, otherwise print records to console
 db.serialize(() => {
   if (!exists) {
-    db.run("CREATE TABLE Dreams (id INTEGER PRIMARY KEY AUTOINCREMENT, dream TEXT)");
+    db.run(
+      "CREATE TABLE Dreams (id INTEGER PRIMARY KEY AUTOINCREMENT, dream TEXT)"
+    );
     console.log("New table Dreams created!");
 
     // insert default dreams
@@ -61,16 +63,14 @@ app.post("/addDream", (request, response) => {
 
   // DISALLOW_WRITE is an ENV variable that gets reset for new projects so you can write to the database
   if (!process.env.DISALLOW_WRITE) {
-    db.run(
-      `INSERT INTO Dreams (dream) VALUES ("${request.body.dream}")`,
-      error => {
-        if (error) {
-          response.send({ message: "error!" });
-        } else {
-          response.send({ message: "success" });
-        }
+    const cleansedDream = cleanseString(request.body.dream);
+    db.run(`INSERT INTO Dreams (dream) VALUES (?)`, cleanseString, error => {
+      if (error) {
+        response.send({ message: "error!" });
+      } else {
+        response.send({ message: "success" });
       }
-    );
+    });
   }
 });
 
@@ -99,10 +99,12 @@ app.get("/clearDreams", (request, response) => {
   }
 });
 
+// helper function that prevents html/css/script malice
+const cleanseString = function(string) {
+  return string.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+};
+
 // listen for requests :)
 var listener = app.listen(process.env.PORT, () => {
   console.log(`Your app is listening on port ${listener.address().port}`);
 });
-
-// TODO
-// - add "clear" to delete all items (CRUDDY FOR REALS)
