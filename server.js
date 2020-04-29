@@ -59,9 +59,10 @@ app.get("/getDreams", (request, response) => {
 
 // endpoint to add a dream to the database
 app.post("/addDream", (request, response) => {
-  console.log(`add to dreams ${request.body}`);
+  console.log(`add to dreams ${request.body.dream}`);
 
-  // DISALLOW_WRITE is an ENV variable that gets reset for new projects so you can write to the database
+  // DISALLOW_WRITE is an ENV variable that gets reset for new projects
+  // so they can write to the database
   if (!process.env.DISALLOW_WRITE) {
     const cleansedDream = cleanseString(request.body.dream);
     db.run(`INSERT INTO Dreams (dream) VALUES (?)`, cleansedDream, error => {
