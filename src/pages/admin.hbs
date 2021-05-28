@@ -24,7 +24,11 @@
           
         <!-- This is the start of content for our page -->
         <h1>Admin</h1>
-        
+        {{#if error}}
+        <p class="error">
+          Whoops! Error connecting to the database–please try again!
+        </p>
+        {{else}}
         <!-- The server script returns the logs in an array so we can write out the length -->
         <p>
           <strong>{{logs.length}} record(s)!</strong>
@@ -61,6 +65,7 @@
           <input type="password" id="pass" name="key" required><br/><br/>
           <button type="submit">Clear ⚠️</button>
         </form>
+        {{/if}}
       </div>
     </div>
     <!-- The footer holds our remix button — you can use it for structure or cut it out ✂ -->

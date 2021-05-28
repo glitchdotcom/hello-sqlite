@@ -63,6 +63,11 @@
         <!-- This is the start of content for our page -->
         <h1>Hello SQLite!</h1>
         
+        {{#if error}}
+        <p class="error">
+          Whoops! Error connecting to the database–please try again!
+        </p>
+        {{else}}
         <div class="poll-form">
           <p>
             Use an SQLite database with your Node.js app.
@@ -108,6 +113,7 @@
           {{/if}}
           
         </div>
+        {{/if}}
         
         <!-- Instructions on using this project -->
         <div class="instructions">
@@ -132,7 +138,7 @@
       <a
         class="btn--remix"
         target="_top"
-        href="https://glitch.com/edit/#!/remix/glitch-hello-node"
+        href="https://glitch.com/edit/#!/remix/hello-sqlite"
       >
         <img
           src="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2FLogo_Color.svg?v=1618199565140"
