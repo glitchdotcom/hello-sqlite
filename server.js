@@ -15,7 +15,7 @@ const sqlite3 = require("sqlite3").verbose();
 const dbWrapper = require("sqlite");
 let db;
 
-// We're using the sqlite npm package which is a wrapper
+// We're using the sqlite wrapper so that we can use async/await
 //https://www.npmjs.com/package/sqlite
 dbWrapper
   .open({
@@ -43,7 +43,7 @@ dbWrapper
         await db.all("SELECT * from Choices");
 
         //If you need to remove a table from the database use this syntax
-        //db.run("DROP TABLE Choices"); //will fail if the table doesn't exist
+        //db.run("DROP TABLE Logs"); //will fail if the table doesn't exist
       }
     } catch (dbError) {
       console.error(dbError);
@@ -106,27 +106,28 @@ fastify.post("/pick", async (request, reply) => {
     // Flag to indicate a choice was picked - will show the poll results instead of the poll form
     params.picked = true;
     // Insert new Log table entry indicating the user choice and timestamp
-    let picks;
     try {
+      // Build the user data from the front-end and the current time into the sql query
       await db.run(
         "INSERT INTO Log (choice, time) VALUES (?, ?)", [
         request.body.language, new Date().toISOString()
       ]
     );
-      // Update the number of times the choice has been picked
+      // Update the number of times the choice has been picked by adding one to it
       await db.run(
         "UPDATE Choices SET picks = picks + 1 WHERE language = ?",
           request.body.language
       );
       // Return the choices so far - page will build these into a chart
-      picks = await db.all("SELECT * from Choices");
+      let picked = await db.all("SELECT * from Choices");
       // We send the choices and numbers in parallel arrays
-      params.choices = JSON.stringify(picks.map(c => c.language));
-      params.picks = JSON.stringify(picks.map(c => c.picks));
+      params.choices = JSON.stringify(picked.map(c => c.language));
+      params.picks = JSON.stringify(picked.map(c => c.picks));
     } catch (dbError) {
       console.error(dbError);
       params.error = true;
     }
+    // Return the info to the page
     reply.view("/src/pages/index.hbs", params);
   }
 });
@@ -135,11 +136,10 @@ fastify.post("/pick", async (request, reply) => {
 fastify.get("/logs", async (request, reply) => {
   let params = {};
   // Return most recent 20
-  let log;
+  //let log;
   try {
-    log = await db.all("SELECT * from Log ORDER BY time DESC LIMIT 20");
     // Return the array of log entries to admin page
-    params.logs = log;
+    params.logs = await db.all("SELECT * from Log ORDER BY time DESC LIMIT 20");
   } catch (dbError) {
     console.error(dbError);
     params.error = true;
@@ -158,11 +158,9 @@ fastify.post("/clearLogs", async (request, reply) => {
   ) {
     // Auth failed, return the log data plus a failed flag
     params.failed = true;
-    let log;
     // Send the log list
     try {
-      log = await db.all("SELECT * from Log ORDER BY time DESC LIMIT 20");
-      params.logs = log;
+      params.logs = await db.all("SELECT * from Log ORDER BY time DESC LIMIT 20");
     } catch (dbError) {
       console.error(dbError);
       params.error = true;
