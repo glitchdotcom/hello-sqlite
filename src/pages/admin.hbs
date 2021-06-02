@@ -24,6 +24,11 @@
           
         <!-- This is the start of content for our page -->
         <h1>Logs</h1>
+        {{#if error}}
+        <p class="error">
+          Whoops! Error connecting to the database–please try again!
+        </p>
+        {{else}}
         
         <!-- The server script returns the logs in an array so we can write out the length -->
         <p>
@@ -33,7 +38,7 @@
         <p>
           <strong>{{logs.length}} record(s)!</strong>
         </p>
-
+        
         <!-- Write out a table row for each entry in the log array showing choice and timestamp -->
         <table>
           <th>Choice</th><th>Time</th>
@@ -63,9 +68,9 @@
           <input type="password" id="pass" name="key" required> 
           <button type="submit">Clear log history</button>
         </form>
+        {{/if}}
       </div>
     </div>
-    
     <!-- The footer holds our remix button — you can use it for structure or cut it out ✂ -->
     <footer class="footer">
       <div class="links"></div>
@@ -75,7 +80,7 @@
       <a
         class="btn--remix"
         target="_top"
-        href="https://glitch.com/edit/#!/remix/glitch-hello-node"
+        href="https://glitch.com/edit/#!/remix/glitch-hello-sqlite"
       >
         <img
           src="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2FLogo_Color.svg?v=1618199565140"

@@ -7,12 +7,13 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "fastify": "^3.14.1",
+    "fastify": "^3.16.2",
     "fastify-formbody": "^5.0.0",
-    "fastify-static": "^4.0.0",
+    "fastify-static": "^4.2.2",
     "handlebars": "^4.7.7",
     "point-of-view": "^4.14.0",
-    "sqlite3": "^4.1.1"
+    "sqlite": "^4.0.23",
+    "sqlite3": "^5.0.2"
   },
   "engines": {
     "node": "12.x"

@@ -31,7 +31,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="text/javascript">
       /*
-      The chart chart uses chart.js - try tweaking the config!
+      The chart uses chart.js - try tweaking the config!
       https://www.chartjs.org/docs/3.0.2/charts/doughnut.html
       */
     function showChart(choices, picks){
@@ -75,10 +75,15 @@
           
         <!-- This is the start of content for our page -->
         <h1>Hello SQLite!</h1>
-          <p>
-            A simple poll built with Chart.js and powered by Node.js with a SQLite database.
+        <p>
+            A poll built with Chart.js and powered by Node.js with a SQLite database.
           </p>
-          <!-- Server returns a flag when the user has submitted a choice and we show the results -->
+        {{#if error}}
+        <p class="error">
+          Whoops! Error connecting to the database–please try again!
+        </p>
+        {{else}}
+        <!-- Server returns a flag when the user has submitted a choice and we show the results -->
           {{#if picked}}
             <h2>
               Results
@@ -88,7 +93,7 @@
                 Submissions so far (see the <a href="/logs">Admin</a> page for a log):
               </p>
               <p>
-                <!-- Pass choices + picks arrays from the API to the chart js script in the page head -->
+                <!-- Pass choices + picks arrays from the API to the chart script in page head -->
                 <canvas id="myChart"></canvas>
                 <script type="text/javascript">
                   showChart({{{choices}}}, {{{picks}}});
@@ -118,6 +123,7 @@
               </form>
             </div>
           {{/if}}
+        {{/if}}
         
         <!-- Instructions on using this project -->
         <div class="instructions">
@@ -133,7 +139,6 @@
         
       </div>
     </div>
-    
     <!-- The footer holds our remix button — you can use it for structure or cut it out ✂ -->
     <footer class="footer">
       <div class="links"></div>
@@ -143,7 +148,7 @@
       <a
         class="btn--remix"
         target="_top"
-        href="https://glitch.com/edit/#!/remix/glitch-hello-sqlite"
+        href="https://glitch.com/edit/#!/remix/hello-sqlite"
       >
         <img
           src="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2FLogo_Color.svg?v=1618199565140"
