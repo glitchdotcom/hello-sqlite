@@ -12,7 +12,7 @@
     <link rel="icon" href="https://glitch.com/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Hello SQLite: Logs</title>
+    <title>Admin</title>
 
     <!-- Import the webpage's stylesheet -->
     <link rel="stylesheet" href="/style.css" />
@@ -23,17 +23,23 @@
       <div class="content" role="main">
           
         <!-- This is the start of content for our page -->
-        <h1>Logs</h1>
-        
-        <!-- The server script returns the logs in an array so we can write out the length -->
-        <p>
-          Each time you submit an option through the poll in the <a href="/">Home</a> page, the app 
-          will add it to the log. <em>Most recent records will be shown (max 20).</em>
+        <h1>Admin</h1>
+        {{#if error}}
+        <p class="error">
+          Whoops! Error connecting to the database–please try again!
         </p>
+        {{else}}
+        <!-- The server script returns the logs in an array so we can write out the length -->
         <p>
           <strong>{{logs.length}} record(s)!</strong>
         </p>
-
+        
+        <p class="error">
+          Each time you submit an option through the poll in the <a href="/">Home</a> page, the app will add it to the log.
+        </p>
+        <p>
+          <em>Most recent records will be shown by default (max 20).</em>
+        </p>
         <!-- Write out a table row for each entry in the log array showing choice and timestamp -->
         <table>
           <th>Choice</th><th>Time</th>
@@ -44,15 +50,11 @@
         
         <!-- The user can clear the logs if they first set up and admin key in the env -->
         <form action="/clearLogs" method="post">
-          <h2>
-            Clear log history
-          </h2>
           <p>
-            Clear the log only if you are absolutely sure! It cannot be undone. 
-            <em>(Check the README for instructions on setting up your admin key.)</em>
+            <em>Check out the README for instructions on setting up your admin key.</em>
           </p>
           <p>
-            Enter your admin key to confirm:
+            Clear the log only if you are absolutely sure!!! Enter your admin key to confirm:
           </p>
           <!-- Server returns a failed flag if the submitted key doesn't match -->
           {{#if failed}}
@@ -60,12 +62,12 @@
           You entered invalid credentials!
           </p>
           {{/if}}
-          <input type="password" id="pass" name="key" required> 
-          <button type="submit">Clear log history</button>
+          <input type="password" id="pass" name="key" required><br/><br/>
+          <button type="submit">Clear ⚠️</button>
         </form>
+        {{/if}}
       </div>
     </div>
-    
     <!-- The footer holds our remix button — you can use it for structure or cut it out ✂ -->
     <footer class="footer">
       <div class="links"></div>

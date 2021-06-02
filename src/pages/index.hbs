@@ -28,41 +28,28 @@
     <link rel="stylesheet" href="/style.css" />
     
     <!-- Show choice chart on poll submission -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script> 
     <script type="text/javascript">
       /*
-      The chart chart uses chart.js - try tweaking the config!
+      The pie chart uses chart.js - try tweaking the config!
       https://www.chartjs.org/docs/3.0.2/charts/doughnut.html
       */
     function showChart(choices, picks){
       // We pass the choices and picks arrays from the page when the server script returns them
       var ctx = document.getElementById('myChart');
       var myLineChart = new Chart(ctx, {
-        type: "doughnut",
+        type: 'pie',
         data: {
           labels: choices,
           datasets: [{
             data: picks,
             backgroundColor: ["#05DA84", "#E6E656", "#E5AED6"],
-            borderColor: "#ffffff",
-            fill: true,
-            hoverOffset: 12,
-            cutout: "60%"
+            borderColor: "#2800FF",
+            fill: true
           }]
         },
         options: {
-          plugins: {
-            legend: { 
-              display: true,
-              position: "bottom",
-              labels: {
-                padding: 24
-              }
-            }
-          },
-          layout: {
-            padding: 24
-          }
+          legend: { display: false }
         }
       });
     }
@@ -75,49 +62,58 @@
           
         <!-- This is the start of content for our page -->
         <h1>Hello SQLite!</h1>
+        
+        {{#if error}}
+        <p class="error">
+          Whoops! Error connecting to the database–please try again!
+        </p>
+        {{else}}
+        <div class="poll-form">
           <p>
-            A simple poll built with Chart.js and powered by Node.js with a SQLite database.
+            Use an SQLite database with your Node.js app.
+          </p>
+          <p>
+            <em>Enter a preference by sending a POST request to the API!</em>
           </p>
           <!-- Server returns a flag when the user has submitted a choice and we show the results -->
           {{#if picked}}
-            <h2>
-              Results
-            </h2>
-            <div class="poll-results">
-              <p>
-                Submissions so far (see the <a href="/logs">Admin</a> page for a log):
-              </p>
-              <p>
-                <!-- Pass choices + picks arrays from the API to the chart js script in the page head -->
-                <canvas id="myChart"></canvas>
-                <script type="text/javascript">
-                  showChart({{{choices}}}, {{{picks}}});
-                </script>
-              </p>
-              <!-- If the user hasn't already made a choice we show the poll -->
-            </div>
+          <h2>
+            Votes
+          </h2>
+          <p>
+            Submissions so far (see the <a href="/logs">Admin</a> page for a log):
+          </p>
+          <p>
+            <!-- Pass choices + picks arrays from the API to the chart js script in the page head -->
+            <canvas id="myChart"  height="200"></canvas>
+            <script type="text/javascript">
+              showChart({{{choices}}}, {{{picks}}});
+            </script>
+          </p>
+          <!-- If the user hasn't already made a choice we show the poll -->
           {{else}}
-            <h2>
-              Poll
-            </h2>
-            <div class="poll-form">
-              <p>
-                What do you like coding most?
-              </p>
-              <!-- Call the server pick endpoint when the user submits an option in the poll -->
-              <form method="post" action="/">
-                <!-- The server script returns the list of language options to offer in the poll -->
-                {{#each options}}
-                <input type="radio" id="{{language}}" name="language" value="{{language}}" required/>
-                <label for="{{language}}">{{language}}</label>
-                {{/each}}
-                <br/><br/>
-                <button type="submit">
-                  Submit
-                </button>
-              </form>
-            </div>
+          <h2>
+            Poll
+          </h2>
+          <p>
+            What do you like coding most?
+          </p>
+          <!-- Call the server pick endpoint when the user submits an option in the poll -->
+          <form method="post" action="/pick">
+            <!-- The server script returns the list of language options to offer in the poll -->
+            {{#each options}}
+            <input type="radio" id="{{language}}" name="language" value="{{language}}" required/>
+            <label for="{{language}}">{{language}}</label>
+            {{/each}}
+            <br/><br/>
+            <button type="submit">
+              Submit
+            </button>
+          </form>
           {{/if}}
+          
+        </div>
+        {{/if}}
         
         <!-- Instructions on using this project -->
         <div class="instructions">
@@ -133,7 +129,6 @@
         
       </div>
     </div>
-    
     <!-- The footer holds our remix button — you can use it for structure or cut it out ✂ -->
     <footer class="footer">
       <div class="links"></div>
@@ -143,7 +138,7 @@
       <a
         class="btn--remix"
         target="_top"
-        href="https://glitch.com/edit/#!/remix/glitch-hello-sqlite"
+        href="https://glitch.com/edit/#!/remix/hello-sqlite"
       >
         <img
           src="https://cdn.glitch.com/605e2a51-d45f-4d87-a285-9410ad350515%2FLogo_Color.svg?v=1618199565140"
